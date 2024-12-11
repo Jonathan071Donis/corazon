@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Te Quiero Princesa</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        .heart {
+            position: relative;
+            width: 12vw;
+            height: 12vw;
+            background: #ff1a1a;
+            margin: 0 auto;
+            transform: rotate(-45deg);
+            box-shadow: 0 10px 20px rgba(139, 0, 0, 0.7);
+        }
+
+        .heart:before,
+        .heart:after {
+            content: '';
+            position: absolute;
+            width: 12vw;
+            height: 12vw;
+            background: #ff1a1a;
+            border-radius: 50%;
+        }
+
+        .heart:before {
+            top: calc(-12vw / 2);
+            left: 0;
+        }
+
+        .heart:after {
+            top: 0;
+            left: calc(12vw / 2);
+        }
+
+        .message {
+            margin-top: 4vh;
+            font-size: 2.5vw;
+            font-weight: bold;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-45deg);
+            }
+        }
+
+        #heart {
+            animation: heartbeat 3s infinite;
+        }
+
+        /* Media queries para ajustar el tamaño en pantallas pequeñas */
+        @media (max-width: 768px) {
+            .heart {
+                width: 18vw;
+                height: 18vw;
+            }
+
+            .heart:before,
+            .heart:after {
+                width: 18vw;
+                height: 18vw;
+            }
+
+            .heart:before {
+                top: calc(-18vw / 2);
+            }
+
+            .heart:after {
+                left: calc(18vw / 2);
+            }
+
+            .message {
+                font-size: 5vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .heart {
+                width: 24vw;
+                height: 24vw;
+            }
+
+            .heart:before,
+            .heart:after {
+                width: 24vw;
+                height: 24vw;
+            }
+
+            .heart:before {
+                top: calc(-24vw / 2);
+            }
+
+            .heart:after {
+                left: calc(24vw / 2);
+            }
+
+            .message {
+                font-size: 6vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="heart" id="heart"></div>
+        <div class="message">Te quiero, princesa enojona ❤️</div>
+    </div>
+
+    <script>
+        const heart = document.getElementById('heart');
+
+        // Animación de latido del corazón
+        let scale = 1;
+        let growing = true;
+
+        function animateHeart() {
+            if (growing) {
+                scale += 0.01;
+                if (scale >= 1.2) {
+                    growing = false;
+                }
+            } else {
+                scale -= 0.01;
+                if (scale <= 1) {
+                    growing = true;
+                }
+            }
+            heart.style.transform = `scale(${scale}) rotate(-45deg)`;
+            requestAnimationFrame(animateHeart);
+        }
+        animateHeart();
+
+        // Generación de estrellas dinámicas
+        function createStars() {
+            const numStars = 100; // Número de estrellas
+            const body = document.body;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 3 + 1; // Tamaño aleatorio
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // Posición inicial aleatoria
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+
+                // Animación de movimiento
+                const duration = Math.random() * 10 + 5; // Duración aleatoria
+                star.style.animation = `fall ${duration}s linear infinite`;
+                body.appendChild(star);
+
+                // Eliminar estrella al final de la animación y crear otra
+                star.addEventListener('animationiteration', () => {
+                    star.style.left = `${Math.random() * 100}vw`;
+                    star.style.top = `-5px`; // Reinicia en la parte superior
+                });
+            }
+        }
+
+        // Animación para que las estrellas caigan
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                from {
+                    transform: translateY(0);
+                }
+                to {
+                    transform: translateY(100vh);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        createStars();
+    </script>
+</body>
+</html>
